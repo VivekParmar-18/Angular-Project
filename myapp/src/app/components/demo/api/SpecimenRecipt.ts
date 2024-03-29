@@ -7,5 +7,5 @@ export interface SpecimenReceipt {
     sdate?: string;
     lrfstatus?: string;
    viewlrf?:string;
-  //  representative?: 
+
 }
