@@ -21,7 +21,7 @@ interface expandedRows {
 export class TableDemoComponent implements OnInit {
     //SpecimenReceipt:[]=[];
 
-    customers1: SpecimenReceipt[] = [];
+    customers1: DashboardLRFs[] = [];
 
     dashboardData: DashboardLRFs[] = [];
 
@@ -52,6 +52,7 @@ export class TableDemoComponent implements OnInit {
     loading: boolean = true;
 
     @ViewChild('filter') filter!: ElementRef;
+    @ViewChild('filter1') filter1!: ElementRef;
 
     constructor(private customerService: CustomerService, private productService: ProductService,private http: HttpClient) { }
 
@@ -61,7 +62,7 @@ export class TableDemoComponent implements OnInit {
             this.loading = false;
 
             // @ts-ignore
-            this.customers1.forEach(customer => customer.date = new Date(customer.cdate));
+            // this.customers1.forEach(customer => customer.date = new Date(customer.cdate));
             console.log(this.customers1);
         });
         // this.customerService.getCustomersMedium().then(customers => this.customers2 = customers);
@@ -163,9 +164,14 @@ export class TableDemoComponent implements OnInit {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
-    clear(table: Table) {
-        table.clear();
+    async clear(table: Table) {
         this.filter.nativeElement.value = '';
+        this.filter1.nativeElement.value = '';
+        table.clear(); // Clear the selection
+        table.reset(); // Reset the state
+        table.sortOrder = 0; // Reset the sorting order
+        table.sortField = null; // Reset the sorting field
+        const customers = await this.customerService.getCustomersLarge2();
+        table.value = customers;
     }
-    
 }
